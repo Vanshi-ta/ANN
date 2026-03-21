@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraHealth - Mental Health Predictor</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom range slider styling */
+        input[type=range] {
+            -webkit-appearance: none; 
+            width: 100%; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #0d9488;
+            cursor: pointer;
+            margin-top: -8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border-radius: 2px;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased h-screen overflow-hidden flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-sm border-r border-slate-200 hidden md:flex flex-col z-10">
+        <div class="h-16 flex items-center px-6 border-b border-slate-100">
+            <div class="h-8 w-8 bg-brand-500 rounded-lg flex items-center justify-center text-white mr-3 shadow-sm">
+                <i class="fa-solid fa-leaf"></i>
+            </div>
+            <h1 class="font-bold text-xl text-slate-800 tracking-tight">AuraHealth</h1>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="/" class="flex items-center px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-brand-600 rounded-xl transition-colors">
+                <i class="fa-solid fa-border-all w-6 text-center mr-2"></i>
+                <span class="font-medium">Dashboard</span>
+            </a>
+            <a href="/" class="flex items-center px-4 py-3 text-brand-700 bg-brand-50 rounded-xl transition-colors">
+                <i class="fa-solid fa-clipboard-list w-6 text-center mr-2"></i>
+                <span class="font-medium">Prediction Form</span>
+            </a>
+            <div class="flex items-center px-4 py-3 text-slate-400 cursor-not-allowed">
+                <i class="fa-solid fa-chart-pie w-6 text-center mr-2"></i>
+                <span class="font-medium">Results</span>
+            </div>
+            <a href="#" class="flex items-center px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-brand-600 rounded-xl transition-colors">
+                <i class="fa-solid fa-circle-info w-6 text-center mr-2"></i>
+                <span class="font-medium">About / Info</span>
+            </a>
+        </nav>
+        <div class="p-4 border-t border-slate-100">
+            <div class="flex items-center p-3 bg-slate-50 rounded-xl">
+                <div class="h-10 w-10 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center font-bold">
+                    U
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-semibold text-slate-700">User Profile</p>
+                    <p class="text-xs text-slate-500">Student</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50 relative">
+        <!-- Top Header -->
+        <header class="h-16 flex-shrink-0 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-6 md:px-8 z-10 sticky top-0">
+            <div class="flex items-center md:hidden">
+                <div class="h-8 w-8 bg-brand-500 rounded-lg flex items-center justify-center text-white mr-3 shadow-sm">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+                <h1 class="font-bold text-lg text-slate-800 tracking-tight">AuraHealth</h1>
+            </div>
+            <div class="hidden md:flex items-center">
+                <h2 class="text-xl font-semibold text-slate-800">{% block header_title %}Overview{% endblock %}</h2>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="w-10 h-10 rounded-full hover:bg-slate-100 text-slate-500 transition-colors flex items-center justify-center">
+                    <i class="fa-regular fa-bell text-lg"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Scrollable Content Area -->
+        <div class="flex-1 overflow-y-auto w-full">
+            <div class="p-4 md:p-8 max-w-5xl mx-auto pb-12 w-full">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </main>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

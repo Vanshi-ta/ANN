@@ -1,32 +1,156 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Result</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<h2>Prediction Result</h2>
+{% block header_title %}Prediction Results{% endblock %}
 
-<h3>Burnout Level: {{ burnout }}</h3>
-<h4>Confidence: {{ confidence }}%</h4>
+{% block content %}
+<div class="mb-8 flex items-center justify-between">
+    <div>
+        <h3 class="text-2xl font-bold text-slate-800">Your AI Analysis</h3>
+        <p class="text-slate-500 mt-1">Based on the inputs provided, here is your burnout tier and personalized recovery plan.</p>
+    </div>
+    <a href="/" class="px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors font-medium shadow-sm flex items-center">
+        <i class="fa-solid fa-arrow-left mr-2"></i> Retake
+    </a>
+</div>
 
-<hr>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Left Column: Score & Summary -->
+    <div class="lg:col-span-1 space-y-6">
+        
+        <!-- Burnout Level Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col items-center justify-center text-center relative overflow-hidden transform transition hover:shadow-md">
+            {% if burnout == "Low" %}
+                <div class="absolute top-0 left-0 w-full h-2 bg-green-500"></div>
+                <div class="h-16 w-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-3xl mb-4 mt-2">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <h4 class="text-slate-500 font-medium mb-1">Burnout Level</h4>
+                <div class="text-4xl font-bold text-slate-800 tracking-tight">Low</div>
+            {% elif burnout == "Medium" %}
+                <div class="absolute top-0 left-0 w-full h-2 bg-yellow-400"></div>
+                <div class="h-16 w-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center text-3xl mb-4 mt-2">
+                    <i class="fa-solid fa-battery-half"></i>
+                </div>
+                <h4 class="text-slate-500 font-medium mb-1">Burnout Level</h4>
+                <div class="text-4xl font-bold text-slate-800 tracking-tight">Medium</div>
+            {% else %}
+                <div class="absolute top-0 left-0 w-full h-2 bg-red-500"></div>
+                <div class="h-16 w-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-3xl mb-4 mt-2">
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+                <h4 class="text-slate-500 font-medium mb-1">Burnout Level</h4>
+                <div class="text-4xl font-bold text-slate-800 tracking-tight">High</div>
+            {% endif %}
+        </div>
 
-<h3>{{ plan.title }}</h3>
+        <!-- Confidence Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transform transition hover:shadow-md">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="font-semibold text-slate-700 flex items-center"><i class="fa-solid fa-bullseye text-brand-500 mr-2"></i> Model Confidence</h4>
+                <span class="text-sm font-bold text-brand-600 px-2 py-1 bg-brand-50 rounded-md">{{ confidence }}%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                <div class="bg-brand-500 h-2.5 rounded-full transition-all duration-1000 ease-out" style="width: {{ confidence }}%"></div>
+            </div>
+            <p class="text-xs text-slate-400 mt-4 leading-relaxed"><i class="fa-solid fa-circle-info mr-1"></i> Based on similarity to training data cases. High confidence indicates a strong match.</p>
+        </div>
 
-<p><b>Activity:</b> {{ plan.activity }}</p>
-<p><b>Duration:</b> {{ plan.duration }}</p>
-<p><b>Intensity:</b> {{ plan.intensity }}</p>
+    </div>
 
-<h4>Steps:</h4>
-<ul>
-    {% for step in plan.steps %}
-        <li>{{ step }}</li>
-    {% endfor %}
-</ul>
+    <!-- Right Column: IKS Plan -->
+    <div class="lg:col-span-2 space-y-6">
+        
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden h-full flex flex-col transform transition hover:shadow-md">
+            <div class="bg-gradient-to-r from-brand-600 to-teal-800 px-6 py-5 text-white flex justify-between items-center relative overflow-hidden">
+                <!-- Decorative background elements -->
+                 <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white opacity-5 rounded-full blur-2xl"></div>
+                 <div class="absolute bottom-0 left-10 -mb-10 w-20 h-20 bg-white opacity-10 rounded-full blur-xl"></div>
+                
+                <div class="relative z-10">
+                    <h4 class="text-xl font-bold">{{ plan.title }}</h4>
+                    <p class="text-brand-100 mt-1 text-sm font-medium">Personalized IKS Recommendation</p>
+                </div>
+                <div class="h-12 w-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl backdrop-blur-md border border-white/20 relative z-10">
+                    <i class="fa-solid fa-spa"></i>
+                </div>
+            </div>
+            
+            <div class="p-6 md:p-8 flex-1 flex flex-col">
+                
+                <!-- Metrics -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-slate-50/80 border border-slate-100 rounded-xl px-5 py-4 flex items-center">
+                        <div class="h-10 w-10 bg-white rounded-lg flex items-center justify-center text-brand-600 shadow-sm mr-4 border border-slate-100">
+                            <i class="fa-solid fa-person-walking"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 font-semibold mb-0.5 uppercase tracking-wider">Activity</p>
+                            <p class="font-bold text-slate-800">{{ plan.activity }}</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50/80 border border-slate-100 rounded-xl px-5 py-4 flex items-center">
+                        <div class="h-10 w-10 bg-white rounded-lg flex items-center justify-center text-brand-600 shadow-sm mr-4 border border-slate-100">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 font-semibold mb-0.5 uppercase tracking-wider">Duration</p>
+                            <p class="font-bold text-slate-800">{{ plan.duration }}</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50/80 border border-slate-100 rounded-xl px-5 py-4 flex items-center">
+                        <div class="h-10 w-10 bg-white rounded-lg flex items-center justify-center text-brand-600 shadow-sm mr-4 border border-slate-100">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 font-semibold mb-0.5 uppercase tracking-wider">Intensity</p>
+                            <p class="font-bold text-slate-800 capitalize">{{ plan.intensity }}</p>
+                        </div>
+                    </div>
+                </div>
 
-<h4>Reason:</h4>
-<p>{{ plan.reason }}</p>
+                <!-- Steps -->
+                <div class="mb-8 bg-slate-50/50 rounded-xl p-6 border border-slate-100">
+                    <h5 class="text-lg font-bold text-slate-800 mb-5 flex items-center">
+                        <i class="fa-solid fa-list-check text-brand-500 mr-2"></i> Step-by-Step Guide
+                    </h5>
+                    <ul class="space-y-4">
+                        {% for step in plan.steps %}
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 mt-0.5">
+                                <div class="h-7 w-7 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-xs font-bold shadow-sm border border-brand-200">
+                                    {{ forloop.counter }}
+                                </div>
+                            </div>
+                            <p class="ml-4 text-slate-700 font-medium pt-0.5">{{ step }}</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
 
-</body>
-</html>
+                <!-- Reason -->
+                <div class="mt-auto">
+                    <div class="bg-amber-50 rounded-xl p-6 border border-amber-100/60 relative overflow-hidden">
+                        <div class="absolute -top-4 -left-3 text-amber-500/10 text-6xl">
+                            <i class="fa-solid fa-quote-left"></i>
+                        </div>
+                        <!-- Abstract shape -->
+                        <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-amber-500/5 rounded-full blur-xl"></div>
+                        
+                        <h5 class="flex items-center text-amber-800 font-bold mb-3 relative z-10 text-lg">
+                            <i class="fa-regular fa-lightbulb text-amber-500 mr-2 text-xl"></i> Why this works for you
+                        </h5>
+                        <div class="relative z-10">
+                            <p class="text-amber-900/80 text-[15px] whitespace-pre-line leading-relaxed">
+                                {{ plan.reason }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

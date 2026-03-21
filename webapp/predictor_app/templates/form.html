@@ -1,76 +1,245 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Mental Health Predictor</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<h2>Enter Your Details</h2>
+{% block header_title %}Predict Burnout & Recommendations{% endblock %}
 
-<form method="post" action="/predict/">
+{% block content %}
+<div class="mb-8">
+    <h3 class="text-2xl font-bold text-slate-800">Mental Health Assessment</h3>
+    <p class="text-slate-500 mt-2">Fill out this secure questionnaire to receive AI-powered burnout analysis and personalized IKS recovery strategies.</p>
+</div>
+
+<form method="post" action="/predict/" class="space-y-6">
     {% csrf_token %}
 
-    <!-- BASIC -->
-    Age: <input type="number" name="age"><br><br>
+    <!-- 1. Basic Info Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transform transition hover:shadow-md">
+        <div class="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center">
+            <div class="h-8 w-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mr-3">
+                <i class="fa-regular fa-id-card"></i>
+            </div>
+            <h4 class="text-lg font-semibold text-slate-800">Basic Information</h4>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">Age</label>
+                <input type="number" name="age" required min="10" max="100" value="22" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 focus:bg-white outline-none transition-all" placeholder="e.g. 22">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">Gender</label>
+                <select name="gender" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 focus:bg-white outline-none transition-all appearance-none">
+                    <option value="1">Male</option>
+                    <option value="0">Female</option>
+                    <option value="-1">Prefer not to say</option>
+                </select>
+            </div>
+            <div>
+                 <label class="block text-sm font-medium text-slate-700 mb-2">Status</label>
+                 <select name="status" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 focus:bg-white outline-none transition-all appearance-none">
+                    <option value="1">Student</option>
+                    <option value="0">Working</option>
+                    <option value="2">Both</option>
+                    <option value="-1">Prefer not to say</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
-    Gender:
-    <select name="gender">
-        <option value="1">Male</option>
-        <option value="0">Female</option>
-        <option value="-1">Prefer not to say</option>
-    </select><br><br>
+    <!-- 2. Digital Behavior Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transform transition hover:shadow-md">
+        <div class="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center">
+            <div class="h-8 w-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mr-3">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+            </div>
+            <h4 class="text-lg font-semibold text-slate-800">Digital Behavior</h4>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Social Media -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Social Media Hours</label>
+                    <span class="text-sm font-bold text-brand-600" id="social-val">5 hrs</span>
+                </div>
+                <input type="range" name="social" min="0" max="24" step="0.5" value="5" oninput="document.getElementById('social-val').innerText = this.value + ' hrs'">
+            </div>
+            <!-- Screen Time -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Total Screen Time</label>
+                    <span class="text-sm font-bold text-brand-600" id="screen-val">6 hrs</span>
+                </div>
+                <input type="range" name="screen" min="0" max="24" step="0.5" value="6" oninput="document.getElementById('screen-val').innerText = this.value + ' hrs'">
+            </div>
+            <!-- Night Scrolling -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Night Scrolling Frequency (0-10)</label>
+                    <span class="text-sm font-bold text-brand-600" id="scroll-val">2</span>
+                </div>
+                <input type="range" name="scroll" min="0" max="10" step="1" value="2" oninput="document.getElementById('scroll-val').innerText = this.value">
+            </div>
+            <!-- Gaming -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Gaming Hours</label>
+                    <span class="text-sm font-bold text-brand-600" id="gaming-val">1 hrs</span>
+                </div>
+                <input type="range" name="gaming" min="0" max="24" step="0.5" value="1" oninput="document.getElementById('gaming-val').innerText = this.value + ' hrs'">
+            </div>
+        </div>
+    </div>
 
-    Status:
-    <select name="status">
-        <option value="1">Student</option>
-        <option value="0">Working</option>
-        <option value="2">Both</option>
-        <option value="-1">Prefer not to say</option>
-    </select><br><br>
+    <!-- 3. Lifestyle Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transform transition hover:shadow-md">
+        <div class="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center">
+            <div class="h-8 w-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mr-3">
+                <i class="fa-solid fa-person-running"></i>
+            </div>
+            <h4 class="text-lg font-semibold text-slate-800">Lifestyle Habits</h4>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Exercise -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Exercise (days per week)</label>
+                    <span class="text-sm font-bold text-brand-600" id="exercise-val">3 days</span>
+                </div>
+                <input type="range" name="exercise" min="0" max="7" step="1" value="3" oninput="document.getElementById('exercise-val').innerText = this.value + ' days'">
+            </div>
+            <!-- Sleep -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Sleep Hours</label>
+                    <span class="text-sm font-bold text-brand-600" id="sleep-val">7 hrs</span>
+                </div>
+                <input type="range" name="sleep" min="0" max="14" step="0.5" value="7" oninput="document.getElementById('sleep-val').innerText = this.value + ' hrs'">
+            </div>
+            <!-- Caffeine -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Caffeine Intake (cups)</label>
+                    <span class="text-sm font-bold text-brand-600" id="caffeine-val">1 cups</span>
+                </div>
+                <input type="range" name="caffeine" min="0" max="10" step="1" value="1" oninput="document.getElementById('caffeine-val').innerText = this.value + ' cups'">
+            </div>
+            <!-- Study/Work -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Study / Work Hours</label>
+                    <span class="text-sm font-bold text-brand-600" id="study-val">6 hrs</span>
+                </div>
+                <input type="range" name="study" min="0" max="24" step="0.5" value="6" oninput="document.getElementById('study-val').innerText = this.value + ' hrs'">
+            </div>
+        </div>
+    </div>
 
-    <!-- DIGITAL -->
-    Social Media Hours: <input name="social"><br><br>
-    Screen Time: <input name="screen"><br><br>
-    Night Scrolling: <input name="scroll"><br><br>
-    Gaming Hours: <input name="gaming"><br><br>
+    <!-- 4. Psychological Metrics Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transform transition hover:shadow-md">
+        <div class="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center">
+            <div class="h-8 w-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center mr-3">
+                <i class="fa-solid fa-head-side-virus"></i>
+            </div>
+            <h4 class="text-lg font-semibold text-slate-800">Psychological Metrics (Scale 1-10)</h4>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Overthinking -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Overthinking</label>
+                    <span class="text-sm font-bold text-brand-600" id="over-val">5</span>
+                </div>
+                <input type="range" name="overthinking" min="1" max="10" step="1" value="5" oninput="document.getElementById('over-val').innerText = this.value">
+            </div>
+            <!-- Anxiety -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Anxiety</label>
+                    <span class="text-sm font-bold text-brand-600" id="anx-val">5</span>
+                </div>
+                <input type="range" name="anxiety" min="1" max="10" step="1" value="5" oninput="document.getElementById('anx-val').innerText = this.value">
+            </div>
+            <!-- Mood Stability -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Mood Stability</label>
+                    <span class="text-sm font-bold text-brand-600" id="mood-val">5</span>
+                </div>
+                <input type="range" name="mood" min="1" max="10" step="1" value="5" oninput="document.getElementById('mood-val').innerText = this.value">
+            </div>
+            <!-- Social Comparison -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Social Comparison</label>
+                    <span class="text-sm font-bold text-brand-600" id="comp-val">5</span>
+                </div>
+                <input type="range" name="comparison" min="1" max="10" step="1" value="5" oninput="document.getElementById('comp-val').innerText = this.value">
+            </div>
+            <!-- Sleep Quality -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Sleep Quality</label>
+                    <span class="text-sm font-bold text-brand-600" id="sq-val">5</span>
+                </div>
+                <input type="range" name="sleep_quality" min="1" max="10" step="1" value="5" oninput="document.getElementById('sq-val').innerText = this.value">
+            </div>
+            <!-- Motivation -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Motivation</label>
+                    <span class="text-sm font-bold text-brand-600" id="mot-val">5</span>
+                </div>
+                <input type="range" name="motivation" min="1" max="10" step="1" value="5" oninput="document.getElementById('mot-val').innerText = this.value">
+            </div>
+            <!-- Fatigue -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">Emotional Fatigue</label>
+                    <span class="text-sm font-bold text-brand-600" id="fat-val">5</span>
+                </div>
+                <input type="range" name="fatigue" min="1" max="10" step="1" value="5" oninput="document.getElementById('fat-val').innerText = this.value">
+            </div>
+        </div>
+    </div>
 
-    <!-- LIFESTYLE -->
-    Exercise per week: <input name="exercise"><br><br>
-    Sleep Hours: <input name="sleep"><br><br>
-    Caffeine Intake: <input name="caffeine"><br><br>
-    Study/Work Hours: <input name="study"><br><br>
+    <!-- 5. IKS Personalization Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transform transition hover:shadow-md">
+        <div class="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center">
+            <div class="h-8 w-8 bg-teal-100 text-teal-600 rounded-lg flex items-center justify-center mr-3">
+                <i class="fa-solid fa-om"></i>
+            </div>
+            <h4 class="text-lg font-semibold text-slate-800">IKS Personalization</h4>
+        </div>
+        <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">Free Time (mins/day)</label>
+                <input type="number" name="time" required value="10" min="5" max="120" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 focus:bg-white outline-none transition-all">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">Fitness Level</label>
+                <select name="fitness" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 focus:bg-white outline-none transition-all appearance-none">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                    <option value="unknown">Prefer not to say</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">Recovery Preference</label>
+                <select name="preference" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 focus:bg-white outline-none transition-all appearance-none">
+                    <option value="">No Preference</option>
+                    <option value="breathing">Breathing / Pranayama</option>
+                    <option value="physical">Physical / Yoga</option>
+                    <option value="mental">Mental / Meditation</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
-    <!-- PSYCHOLOGICAL -->
-    Overthinking (1-10): <input name="overthinking"><br><br>
-    Anxiety (1-10): <input name="anxiety"><br><br>
-    Mood Stability (1-10): <input name="mood"><br><br>
-    Social Comparison (1-10): <input name="comparison"><br><br>
-    Sleep Quality (1-10): <input name="sleep_quality"><br><br>
-    Motivation (1-10): <input name="motivation"><br><br>
-    Fatigue (1-10): <input name="fatigue"><br><br>
-
-    <!-- IKS INPUT -->
-    Free Time (minutes): <input name="time"><br><br>
-
-    Fitness Level:
-    <select name="fitness">
-        <option value="low">Low</option>
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
-        <option value="unknown">Prefer not to say</option>
-    </select><br><br>
-
-    Preference:
-    <select name="preference">
-        <option value="breathing">Breathing</option>
-        <option value="physical">Yoga</option>
-        <option value="mental">Meditation</option>
-        <option value="">No Preference</option>
-    </select><br><br>
-
-    <button type="submit">Predict</button>
-
+    <!-- Submit Action -->
+    <div class="flex justify-end pt-4 pb-8">
+        <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center transform hover:-translate-y-0.5">
+            <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>
+            Generate AI Prediction
+        </button>
+    </div>
 </form>
-
-</body>
-</html>
+{% endblock %}
