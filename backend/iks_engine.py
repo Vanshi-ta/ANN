@@ -40,8 +40,10 @@ def get_duration(free_time):
 # Intensity Logic
 # -------------------------------
 
-def get_intensity(age, fitness):
-    if age > 35 or fitness == "low":
+def get_intensity(age, fitness, burnout):
+    if burnout == "High":
+        return "very gentle"
+    elif age > 35 or fitness == "low":
         return "gentle"
     elif fitness == "high":
         return "intense"
@@ -68,7 +70,7 @@ def filter_by_preference(options, preference):
 def generate_iks_plan(burnout, age, free_time, fitness, preference=None):
 
     # get base options
-    options = IKS_LIBRARY[burnout]
+    options = IKS_LIBRARY.get(burnout, IKS_LIBRARY["Medium"])
 
     # apply preference filter
     options = filter_by_preference(options, preference)
@@ -82,17 +84,37 @@ def generate_iks_plan(burnout, age, free_time, fitness, preference=None):
     duration = get_duration(free_time)
 
     # intensity
-    intensity = get_intensity(age, fitness)
+    intensity = get_intensity(age, fitness, burnout)
+    steps = []
+
+    if burnout == "High":
+        steps = [
+            "5 min deep breathing",
+            f"{duration} of {name}",
+            "5 min relaxation"
+        ]
+    elif burnout == "Medium":
+        steps = [
+            "3 min breathing warmup",
+            f"{duration} of {name}"
+        ]
+    else:
+        steps = [
+            f"{duration} of {name}"
+        ]
+
 
     # explanation (VERY IMPORTANT)
     reason = f"""
 Based on your burnout level ({burnout}), age ({age}), and available time ({free_time} minutes),
 a {intensity} session of {name} for {duration} is recommended.
 
-Since your current lifestyle indicates moderate mental load, this practice will help:
-• reduce stress levels
-• improve focus and clarity
-• stabilize emotional balance
+Why this works for you:
+• Your current routine suggests elevated mental load
+• This practice helps calm the nervous system
+• Improves focus and emotional balance over time
+
+Because you have {free_time} minutes available, this duration ensures consistency without overwhelming your schedule.
 """
 
     # structured response
@@ -101,5 +123,6 @@ Since your current lifestyle indicates moderate mental load, this practice will 
         "activity": name,
         "duration": duration,
         "intensity": intensity,
+        "steps": steps,
         "reason": reason.strip()
     }

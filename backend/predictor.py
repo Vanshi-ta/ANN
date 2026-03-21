@@ -4,6 +4,9 @@ import numpy as np
 import pandas as pd
 import joblib
 from tensorflow.keras.models import load_model
+import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+
 
 # load model
 model = load_model("../model/mental_health_ann_model.keras")

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mental Health Predictor</title>
+</head>
+<body>
+
+<h2>Enter Your Details</h2>
+
+<form method="post" action="/predict/">
+    {% csrf_token %}
+
+    <!-- BASIC -->
+    Age: <input type="number" name="age"><br><br>
+
+    Gender:
+    <select name="gender">
+        <option value="1">Male</option>
+        <option value="0">Female</option>
+        <option value="-1">Prefer not to say</option>
+    </select><br><br>
+
+    Status:
+    <select name="status">
+        <option value="1">Student</option>
+        <option value="0">Working</option>
+        <option value="2">Both</option>
+        <option value="-1">Prefer not to say</option>
+    </select><br><br>
+
+    <!-- DIGITAL -->
+    Social Media Hours: <input name="social"><br><br>
+    Screen Time: <input name="screen"><br><br>
+    Night Scrolling: <input name="scroll"><br><br>
+    Gaming Hours: <input name="gaming"><br><br>
+
+    <!-- LIFESTYLE -->
+    Exercise per week: <input name="exercise"><br><br>
+    Sleep Hours: <input name="sleep"><br><br>
+    Caffeine Intake: <input name="caffeine"><br><br>
+    Study/Work Hours: <input name="study"><br><br>
+
+    <!-- PSYCHOLOGICAL -->
+    Overthinking (1-10): <input name="overthinking"><br><br>
+    Anxiety (1-10): <input name="anxiety"><br><br>
+    Mood Stability (1-10): <input name="mood"><br><br>
+    Social Comparison (1-10): <input name="comparison"><br><br>
+    Sleep Quality (1-10): <input name="sleep_quality"><br><br>
+    Motivation (1-10): <input name="motivation"><br><br>
+    Fatigue (1-10): <input name="fatigue"><br><br>
+
+    <!-- IKS INPUT -->
+    Free Time (minutes): <input name="time"><br><br>
+
+    Fitness Level:
+    <select name="fitness">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+        <option value="unknown">Prefer not to say</option>
+    </select><br><br>
+
+    Preference:
+    <select name="preference">
+        <option value="breathing">Breathing</option>
+        <option value="physical">Yoga</option>
+        <option value="mental">Meditation</option>
+        <option value="">No Preference</option>
+    </select><br><br>
+
+    <button type="submit">Predict</button>
+
+</form>
+
+</body>
+</html>

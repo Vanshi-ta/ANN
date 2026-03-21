@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Result</title>
+</head>
+<body>
+
+<h2>Prediction Result</h2>
+
+<h3>Burnout Level: {{ burnout }}</h3>
+<h4>Confidence: {{ confidence }}%</h4>
+
+<hr>
+
+<h3>{{ plan.title }}</h3>
+
+<p><b>Activity:</b> {{ plan.activity }}</p>
+<p><b>Duration:</b> {{ plan.duration }}</p>
+<p><b>Intensity:</b> {{ plan.intensity }}</p>
+
+<h4>Steps:</h4>
+<ul>
+    {% for step in plan.steps %}
+        <li>{{ step }}</li>
+    {% endfor %}
+</ul>
+
+<h4>Reason:</h4>
+<p>{{ plan.reason }}</p>
+
+</body>
+</html>

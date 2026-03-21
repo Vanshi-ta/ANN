@@ -34,7 +34,8 @@ user_data = {
 ann_input, iks_input = split_user_input(user_data)
 
 # prediction
-burnout = predict_burnout(ann_input)
+burnout, confidence = predict_burnout(ann_input)
 
 print("Burnout Level:", burnout)
+print("Confidence:", round(confidence * 100, 2), "%")
 print("IKS Input:", iks_input)
