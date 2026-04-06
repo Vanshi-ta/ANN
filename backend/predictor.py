@@ -34,6 +34,8 @@ feature_names = [
     "Emotional_Fatigue_Score"
 ]
 
+
+label_encoder = joblib.load("../model/label_encoder.pkl")
 burnout_labels = {
     0: "Low",
     1: "Medium",
@@ -47,8 +49,14 @@ def predict_burnout(ann_input):
     scaled = scaler.transform(df)
 
     prediction = model.predict(scaled)
-
+    print("RAW OUTPUT:", prediction)
+    
     predicted_class = np.argmax(prediction)
     confidence = float(np.max(prediction))
 
-    return burnout_labels[predicted_class], confidence
+    print("\nINPUT DF:\n", df)
+    print("\nSCALED INPUT:\n", scaled)
+
+    label = label_encoder.inverse_transform([predicted_class])[0]
+    return label, confidence
+    
